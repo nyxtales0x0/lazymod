@@ -9,6 +9,7 @@ import (
 var statusCode string = "MAIN"
 
 func main() {
+	apps.RunAddStats()
 	for {
 		if statusCode == "MAIN" {
 			model := apps.RunMainMenu()
