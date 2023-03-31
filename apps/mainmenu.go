@@ -2,26 +2,26 @@ package apps
 
 import tea "github.com/charmbracelet/bubbletea"
 
-type MainMenuModel struct {
+type mainMenuModel struct {
 	choices   []string
 	cursorPos int
+	nextCode  string
 }
 
-func makeMainMenu() MainMenuModel {
-	return MainMenuModel{
+func makeMainMenu() mainMenuModel {
+	return mainMenuModel{
 		choices: []string{
 			"Create a new category",
 			"Edit existing categories",
 		},
-		cursorPos: 0,
 	}
 }
 
-func (model MainMenuModel) Init() tea.Cmd {
+func (model mainMenuModel) Init() tea.Cmd {
 	return tea.ClearScreen
 }
 
-func (model MainMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (model mainMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -34,13 +34,16 @@ func (model MainMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				model.cursorPos++
 			}
 		case "enter":
-			return model, tea.Quit
+			if model.cursorPos == 0 {
+				model.nextCode = "ADD_CATEGORY"
+				return model, tea.Quit
+			}
 		}
 	}
 	return model, nil
 }
 
-func (model MainMenuModel) View() string {
+func (model mainMenuModel) View() string {
 	uiString := "What would you like to do?\n\n"
 	for index, choice := range model.choices {
 		cursorString := "  "
@@ -52,8 +55,12 @@ func (model MainMenuModel) View() string {
 	return uiString
 }
 
-func RunMainMenu() (tea.Model, string) {
+func (model mainMenuModel) GetNextCode() string {
+	return model.nextCode
+}
+
+func RunMainMenu() mainMenuModel {
 	app := tea.NewProgram(makeMainMenu())
 	model, _ := app.Run()
-	return model, "EXIT"
+	return model.(mainMenuModel)
 }

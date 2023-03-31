@@ -4,20 +4,21 @@ import (
 	"lazymod/apps"
 	"os"
 	"strings"
-
-	tea "github.com/charmbracelet/bubbletea"
 )
 
 var statusCode string = "MAIN"
-var lastModel tea.Model
 
 func main() {
 	for {
 		if statusCode == "MAIN" {
-			model, code := apps.RunMainMenu()
-			lastModel = model
+			model := apps.RunMainMenu()
+			code := model.GetNextCode()
 			handleStatusCode(code)
-			println(statusCode)
+		}
+		if statusCode == "ADD_CATEGORY" {
+			model := apps.RunAddCategory()
+			code := model.GetNextCode()
+			handleStatusCode(code)
 		}
 		if statusCode == "EXIT" {
 			os.Exit(0)
