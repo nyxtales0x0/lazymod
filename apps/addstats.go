@@ -1,63 +1,18 @@
 package apps
 
 import (
-	"fmt"
-	"io"
+	"lazymod/utils"
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 )
-
-type statItem string
-
-func (stat statItem) FilterValue() string { return "" }
-
-type statsDelegate struct{}
-
-func (delegate statsDelegate) Height() int { return 1 }
-
-func (delegate statsDelegate) Spacing() int { return 0 }
-
-func (delegate statsDelegate) Update(msg tea.Msg, model *list.Model) tea.Cmd { return nil }
-
-func (delegate statsDelegate) Render(writer io.Writer, statsList list.Model, index int, stat list.Item) {
-	uiString := ""
-	if index == statsList.Index() {
-		uiString = fmt.Sprintf("> %d. %s", index, stat)
-	} else {
-		uiString = fmt.Sprintf("  %d. %s", index, stat)
-	}
-	fmt.Fprint(writer, uiString)
-}
 
 type addStatsModel struct {
 	statsList list.Model
 }
 
 func makeAddStatsModel() addStatsModel {
-	statItems := []list.Item{
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-		statItem("Hello"),
-	}
-	statsList := list.New(statItems, statsDelegate{}, 20, 15)
+	statsList := utils.MakeSimpleList()
 	return addStatsModel{
 		statsList,
 	}
