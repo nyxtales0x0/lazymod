@@ -2,6 +2,7 @@ package apps
 
 import (
 	"lazymod/utils"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -12,7 +13,14 @@ type addStatsModel struct {
 }
 
 func makeAddStatsModel() addStatsModel {
-	statsList := utils.MakeSimpleList()
+	startupScene := utils.ParseSceneFile("startup.txt.json")
+	stats := []string{}
+	for _, line := range startupScene.Lines {
+		if strings.Contains(line, "*create") {
+			stats = append(stats, line)
+		}
+	}
+	statsList := utils.MakeSimpleList(stats)
 	return addStatsModel{
 		statsList,
 	}
