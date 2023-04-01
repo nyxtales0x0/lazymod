@@ -30,11 +30,15 @@ func (delegate itemDelegate) Render(writer io.Writer, statsList list.Model, inde
 	fmt.Fprint(writer, uiString)
 }
 
-func MakeSimpleList(items []string) list.Model {
+func MakeSimpleList(title string, items []string) list.Model {
 	listItems := []list.Item{}
 	for _, item := range items {
 		listItems = append(listItems, listItem(item))
 	}
-	simpleList := list.New(listItems, itemDelegate{}, 20, 15)
+	simpleList := list.New(listItems, itemDelegate{}, 50, 15)
+	simpleList.Title = title
+	simpleList.DisableQuitKeybindings()
+	simpleList.SetFilteringEnabled(false)
+	simpleList.SetShowHelp(false)
 	return simpleList
 }

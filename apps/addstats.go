@@ -23,7 +23,7 @@ func makeAddStatsModel() addStatsModel {
 			stats = append(stats, line)
 		}
 	}
-	statsList := utils.MakeSimpleList(stats)
+	statsList := utils.MakeSimpleList("Which stat do you wish to add?", stats)
 	return addStatsModel{
 		statsList: statsList,
 	}

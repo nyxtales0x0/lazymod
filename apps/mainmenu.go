@@ -13,7 +13,7 @@ type mainMenuModel struct {
 }
 
 func makeMainMenu() mainMenuModel {
-	choicesList := utils.MakeSimpleList([]string{
+	choicesList := utils.MakeSimpleList("What would you like to do?", []string{
 		"Add stats to mod menu",
 		"Create a new category",
 		"Edit existing categories",
