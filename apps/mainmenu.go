@@ -1,19 +1,25 @@
 package apps
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"lazymod/utils"
+
+	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type mainMenuModel struct {
-	choices   []string
-	cursorPos int
-	nextCode  string
+	choicesList list.Model
+	nextCode    string
 }
 
 func makeMainMenu() mainMenuModel {
+	choicesList := utils.MakeSimpleList([]string{
+		"Add stats to mod menu",
+		"Create a new category",
+		"Edit existing categories",
+	})
 	return mainMenuModel{
-		choices: []string{
-			"Create a new category",
-			"Edit existing categories",
-		},
+		choicesList: choicesList,
 	}
 }
 
@@ -25,34 +31,20 @@ func (model mainMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "up":
-			if model.cursorPos > 0 {
-				model.cursorPos--
-			}
-		case "down":
-			if model.cursorPos-1 < len(model.choices) {
-				model.cursorPos++
-			}
 		case "enter":
-			if model.cursorPos == 0 {
+			if model.choicesList.Index() == 1 {
 				model.nextCode = "ADD_CATEGORY"
 				return model, tea.Quit
 			}
 		}
 	}
-	return model, nil
+	var cmd tea.Cmd
+	model.choicesList, cmd = model.choicesList.Update(msg)
+	return model, cmd
 }
 
 func (model mainMenuModel) View() string {
-	uiString := "What would you like to do?\n\n"
-	for index, choice := range model.choices {
-		cursorString := "  "
-		if index == model.cursorPos {
-			cursorString = "> "
-		}
-		uiString += cursorString + choice + "\n"
-	}
-	return uiString
+	return model.choicesList.View()
 }
 
 func (model mainMenuModel) GetNextCode() string {
