@@ -30,7 +30,11 @@ func (delegate itemDelegate) Render(writer io.Writer, statsList list.Model, inde
 	fmt.Fprint(writer, uiString)
 }
 
-func MakeSimpleList() list.Model {
-	simpleList := list.New([]list.Item{}, itemDelegate{}, 20, 15)
+func MakeSimpleList(items []string) list.Model {
+	listItems := []list.Item{}
+	for _, item := range items {
+		listItems = append(listItems, listItem(item))
+	}
+	simpleList := list.New(listItems, itemDelegate{}, 20, 15)
 	return simpleList
 }
