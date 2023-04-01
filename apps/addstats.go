@@ -1,6 +1,7 @@
 package apps
 
 import (
+	"fmt"
 	"lazymod/utils"
 	"strings"
 
@@ -9,8 +10,9 @@ import (
 )
 
 type addStatsModel struct {
-	statsList list.Model
-	nextCode  string
+	statsList    list.Model
+	selectedStat list.Item
+	nextCode     string
 }
 
 func makeAddStatsModel() addStatsModel {
@@ -37,6 +39,7 @@ func (model addStatsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "enter":
 			model.nextCode = "EXIT"
+			model.selectedStat = model.statsList.SelectedItem()
 			return model, tea.Quit
 		}
 	}
@@ -47,6 +50,10 @@ func (model addStatsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (model addStatsModel) View() string {
 	return model.statsList.View()
+}
+
+func (model addStatsModel) GetSelectedItemString() string {
+	return fmt.Sprint(model.selectedStat)
 }
 
 func (model addStatsModel) GetNextCode() string {
