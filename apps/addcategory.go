@@ -34,7 +34,7 @@ func (model addCategoryModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "enter":
 			model.categoryName = model.inputBox.Value()
-			model.nextCode = "EXIT"
+			model.nextCode = "ADD_STATS"
 			return model, tea.Quit
 		}
 	}

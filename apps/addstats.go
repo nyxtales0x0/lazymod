@@ -10,6 +10,7 @@ import (
 
 type addStatsModel struct {
 	statsList list.Model
+	nextCode  string
 }
 
 func makeAddStatsModel() addStatsModel {
@@ -22,7 +23,7 @@ func makeAddStatsModel() addStatsModel {
 	}
 	statsList := utils.MakeSimpleList(stats)
 	return addStatsModel{
-		statsList,
+		statsList: statsList,
 	}
 }
 
@@ -31,6 +32,14 @@ func (model addStatsModel) Init() tea.Cmd {
 }
 
 func (model addStatsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "enter":
+			model.nextCode = "EXIT"
+			return model, tea.Quit
+		}
+	}
 	var cmd tea.Cmd
 	model.statsList, cmd = model.statsList.Update(msg)
 	return model, cmd
@@ -38,6 +47,10 @@ func (model addStatsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (model addStatsModel) View() string {
 	return model.statsList.View()
+}
+
+func (model addStatsModel) GetNextCode() string {
+	return model.nextCode
 }
 
 func RunAddStats() addStatsModel {

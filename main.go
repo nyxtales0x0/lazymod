@@ -9,17 +9,21 @@ import (
 var statusCode string = "MAIN"
 
 func main() {
-	apps.RunAddStats()
 	for {
 		if statusCode == "MAIN" {
 			model := apps.RunMainMenu()
 			code := model.GetNextCode()
-			handleStatusCode(code)
+			updateStatusCode(code)
 		}
 		if statusCode == "ADD_CATEGORY" {
 			model := apps.RunAddCategory()
 			code := model.GetNextCode()
-			handleStatusCode(code)
+			updateStatusCode(code)
+		}
+		if statusCode == "ADD_STATS" {
+			model := apps.RunAddStats()
+			code := model.GetNextCode()
+			updateStatusCode(code)
 		}
 		if statusCode == "EXIT" {
 			os.Exit(0)
@@ -27,7 +31,7 @@ func main() {
 	}
 }
 
-func handleStatusCode(code string) {
+func updateStatusCode(code string) {
 	if strings.TrimSpace(code) != "" {
 		statusCode = code
 	}
