@@ -1,6 +1,8 @@
 package apps
 
 import (
+	"fmt"
+
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -8,12 +10,12 @@ import (
 type addCategoryModel struct {
 	categoryName string
 	inputBox     textinput.Model
-	isBlinking   bool
 	nextCode     string
 }
 
 func makeAddCategoryModel() addCategoryModel {
 	inputBox := textinput.New()
+	inputBox.Prompt = "> "
 	inputBox.Focus()
 	return addCategoryModel{
 		inputBox: inputBox,
@@ -21,14 +23,13 @@ func makeAddCategoryModel() addCategoryModel {
 }
 
 func (model addCategoryModel) Init() tea.Cmd {
-	return tea.ClearScreen
+	return tea.Batch(
+		tea.ClearScreen,
+		textinput.Blink,
+	)
 }
 
 func (model addCategoryModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if !model.isBlinking {
-		model.isBlinking = true
-		return model, textinput.Blink
-	}
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -44,9 +45,10 @@ func (model addCategoryModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (model addCategoryModel) View() string {
-	uiString := "What would you like to call the category?\n"
-	uiString += "> " + model.inputBox.Value()
-	return uiString
+	return fmt.Sprintf(
+		"What would you like to call the category?\n%s",
+		model.inputBox.View(),
+	)
 }
 
 func (model addCategoryModel) GetCategoryName() string {
